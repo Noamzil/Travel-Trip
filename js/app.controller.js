@@ -109,5 +109,6 @@ function OnRemoveLoc(str) {
     });
     locService.removeLoc(currLoc);
     onRenderSavedLoc();
+    storageService.saveToStorage('locations', locs);
   });
 }
