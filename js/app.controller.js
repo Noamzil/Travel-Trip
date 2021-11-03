@@ -77,7 +77,14 @@ function onGetSearchLoc(adress) {
 
 function onRenderSavedLoc() {
   var elSavedLoc = document.querySelector('.saved-locations');
-  // elSavedLoc.innerHTML = '<li>Test</li>'
+  locService.getLocs()
+  .then(res => {
+    var strHtml = ''
+    res.forEach(element => {
+      strHtml+= `<li>${element.name}</li>`      
+    })
+    elSavedLoc.innerHTML = strHtml
+  })
 }
 
-// onRenderSavedLoc()
+onRenderSavedLoc()
