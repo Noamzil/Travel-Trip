@@ -48,7 +48,6 @@ function _connectGoogleApi() {
 function mapCurrLoc(map) {
   map.addListener('click', (mapsMouseEvent) => {
     var loc = mapsMouseEvent.latLng.toJSON();
-    console.log(`location picked ` + loc.lat, loc.lng);
     panTo(loc.lat, loc.lng);
     addMarker(loc);
   });
