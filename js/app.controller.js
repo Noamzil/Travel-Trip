@@ -10,6 +10,7 @@ window.onGetUserPos = onGetUserPos;
 window.onGetSearchLoc = onGetSearchLoc;
 window.OnGoTo = OnGoTo;
 window.OnRemoveLoc = OnRemoveLoc;
+window.onCopyUrl = onCopyUrl
 
 function onInit() {
   onRenderSavedLoc();
@@ -107,8 +108,14 @@ function OnRemoveLoc(str) {
     var currLoc = locs.findIndex((loc) => {
       return str === loc.name
     });
+
     locService.removeLoc(currLoc);
     onRenderSavedLoc();
     storageService.saveToStorage('locations', locs);
   });
+}
+
+function onCopyUrl() {
+  var url = window.location.href
+  navigator.clipboard.writeText(url)
 }

@@ -3,6 +3,7 @@ import { storageService } from './storage.service.js';
 export const locService = {
   getLocs,
   updateLocs,
+  removeLoc
 };
 
 const locs = storageService.loadFromStorage(`locations`) || []
@@ -15,4 +16,8 @@ function updateLocs(loc) {
   locs.push(loc);
   console.log(`locs`, locs);
   return locs;
+}
+
+function removeLoc(idx) {
+  locs.splice(idx,1)
 }
