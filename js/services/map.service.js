@@ -2,10 +2,10 @@ export const mapService = {
   initMap,
   addMarker,
   panTo,
+  mapCurrLoc,
 };
 
 var gMap;
-
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
   return _connectGoogleApi().then(() => {
@@ -13,6 +13,7 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
       center: { lat, lng },
       zoom: 15,
     });
+    mapCurrLoc(gMap);
   });
 }
 
@@ -41,5 +42,14 @@ function _connectGoogleApi() {
   return new Promise((resolve, reject) => {
     elGoogleApi.onload = resolve;
     elGoogleApi.onerror = () => reject('Google script failed to load');
+  });
+}
+
+function mapCurrLoc(map) {
+  map.addListener('click', (mapsMouseEvent) => {
+    var loc = mapsMouseEvent.latLng.toJSON();
+    console.log(`location picked ` + loc.lat, loc.lng);
+    panTo(loc.lat, loc.lng);
+    addMarker(loc);
   });
 }
