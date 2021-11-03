@@ -6,6 +6,8 @@ window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
+window.onGetSearchLoc = onGetSearchLoc;
+
 
 function onInit() {
   mapService
@@ -48,7 +50,19 @@ function onGetUserPos() {
       console.log('err!!!', err);
     });
 }
-function onPanTo() {
+function onPanTo(value) {
   console.log('Panning the Map');
-  mapService.panTo(35.6895, 139.6917);
+  onGetSearchLoc(value)
+  .then(res => mapService.panTo(res.lat, res.lng))
+}
+
+
+function onGetSearchLoc(adress) {
+  const searchLocApi = 'AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg'
+  // const adress = 'haderah'
+  var searchLoc = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`)
+    .then(res => res.json())
+    .then(res => res.results[0].geometry.location)
+    .then(res => { return res })
+  return searchLoc
 }
