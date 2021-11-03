@@ -9,7 +9,6 @@ window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onGetSearchLoc = onGetSearchLoc;
 
-
 function onInit() {
   mapService
     .initMap()
@@ -53,34 +52,36 @@ function onGetUserPos() {
 }
 function onPanTo(value) {
   console.log('Panning the Map');
-  onGetSearchLoc(value)
-    .then(res => mapService.panTo(res.lat, res.lng))
+  onGetSearchLoc(value).then((res) => mapService.panTo(res.lat, res.lng));
 }
-
 
 function onGetSearchLoc(adress) {
   console.log(adress);
-  const locations = storageService.loadFromStorage('locations') || {}
-  if (location[adress]) return Promise.resolve(location[adress])
-  var searchLoc = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`)
-    .then(res => res.json())
-    .then(res => res.results[0].geometry.location)
-    .then(res => {
-      locations[adress] = {
+//   const locations = storageService.loadFromStorage('locations') || {};
+  if (location[adress]) return Promise.resolve(location[adress]);
+  var searchLoc = fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`
+  )
+    .then((res) => res.json())
+    .then((res) => res.results[0].geometry.location)
+    .then((res) => {
+     var currLoc = {
         name: adress,
         lat: res.lat,
-        lng: res.lng
-      }
-      storageService.saveToStorage('location', locations)
-      return res
-    })
-    console.log(locations);
-  return searchLoc
+        lng: res.lng,
+        weather: `none`,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      var locs = locService.updateLocs(currLoc);
+      storageService.saveToStorage('locations', locs);
+      return res;
+    });
+  return searchLoc;
 }
 
-
 function onRenderSavedLoc() {
-  var elSavedLoc = document.querySelector('.saved-locations')
+  var elSavedLoc = document.querySelector('.saved-locations');
   // elSavedLoc.innerHTML = '<li>Test</li>'
 }
 

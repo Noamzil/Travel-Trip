@@ -1,30 +1,18 @@
+import { storageService } from './storage.service.js';
+
 export const locService = {
   getLocs,
+  updateLocs,
 };
 
-var gId = 101;
-
-const locs = [
-  {
-    id: gId++,
-    name: 'Neveragain',
-    lat: 32.0472,
-    lng: 34.832581,
-    weather: `none`,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-  {
-    id: gId++,
-    name: 'Greatplace',
-    lat: 32.047104,
-    lng: 34.832384,
-    weather: `none`,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  },
-];
+const locs = storageService.loadFromStorage(`locations`) || []
 
 function getLocs() {
   return new Promise((resolve, reject) => resolve(locs));
+}
+
+function updateLocs(loc) {
+  locs.push(loc);
+  console.log(`locs`, locs);
+  return locs;
 }
