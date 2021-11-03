@@ -27,13 +27,11 @@ function getPosition() {
 }
 
 function onAddMarker() {
-  console.log('Adding a marker');
   mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
 }
 
 function onGetLocs() {
   locService.getLocs().then((locs) => {
-    console.log('Locations:', locs);
     document.querySelector('.locs').innerText = JSON.stringify(locs);
   });
 }
@@ -41,7 +39,7 @@ function onGetLocs() {
 function onGetUserPos() {
   getPosition()
     .then((pos) => {
-      console.log('User position is:', pos.coords);
+      mapService.panTo(pos.coords.latitude, pos.coords.longitude);
       document.querySelector(
         '.user-pos'
       ).innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
@@ -51,13 +49,10 @@ function onGetUserPos() {
     });
 }
 function onPanTo(value) {
-  console.log('Panning the Map');
   onGetSearchLoc(value).then((res) => mapService.panTo(res.lat, res.lng));
 }
 
 function onGetSearchLoc(adress) {
-  console.log(adress);
-//   const locations = storageService.loadFromStorage('locations') || {};
   if (location[adress]) return Promise.resolve(location[adress]);
   var searchLoc = fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`
@@ -65,7 +60,7 @@ function onGetSearchLoc(adress) {
     .then((res) => res.json())
     .then((res) => res.results[0].geometry.location)
     .then((res) => {
-     var currLoc = {
+      var currLoc = {
         name: adress,
         lat: res.lat,
         lng: res.lng,
