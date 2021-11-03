@@ -8,9 +8,11 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onGetSearchLoc = onGetSearchLoc;
-window.copyUrl = copyUrl
+window.OnGoTo = OnGoTo;
+window.OnRemoveLoc = OnRemoveLoc;
 
 function onInit() {
+  onRenderSavedLoc();
   mapService
     .initMap()
     .then(() => {
@@ -21,7 +23,6 @@ function onInit() {
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
-  console.log('Getting Pos');
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
@@ -52,8 +53,10 @@ function onGetUserPos() {
     });
 }
 function onPanTo(value) {
-  console.log('Panning the Map');
-  onGetSearchLoc(value).then((res) => mapService.panTo(res.lat, res.lng));
+  onGetSearchLoc(value).then((res) => {
+    onRenderSavedLoc();
+    mapService.panTo(res.lat, res.lng);
+  });
 }
 
 function onGetSearchLoc(adress) {
@@ -83,18 +86,28 @@ function onGetSearchLoc(adress) {
 
 function onRenderSavedLoc() {
   var elSavedLoc = document.querySelector('.saved-locations');
-  locService.getLocs()
-    .then(res => {
-      var strHtml = ''
-      res.forEach(element => {
-        strHtml += `<li>${element.name}</li>`
-      })
-      elSavedLoc.innerHTML = strHtml
-    })
+  locService.getLocs().then((res) => {
+    var strHtml = '';
+    res.forEach((element) => {
+      strHtml += `<li>${element.name} 
+      <button onclick="OnGoTo(${element.lat},${element.lng})" class="btn-go-to">Go</button>
+      <button onclick="OnRemoveLoc('${element.name}')" class="btn-remove-loc">Remove</button>
+      </li>`;
+    });
+    elSavedLoc.innerHTML = strHtml;
+  });
 }
 
+function OnGoTo(lat, lng) {
+  mapService.panTo(lat, lng);
+}
 
-function copyUrl() {
-  var url = window.location.href
-  navigator.clipboard.writeText(url)
+function OnRemoveLoc(str) {
+  locService.getLocs().then((locs) => {
+    var currLoc = locs.findIndex((loc) => {
+      return str === loc.name
+    });
+    locService.removeLoc(currLoc);
+    onRenderSavedLoc();
+  });
 }
