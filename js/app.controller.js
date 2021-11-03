@@ -1,5 +1,6 @@
 import { locService } from './services/loc.service.js';
 import { mapService } from './services/map.service.js';
+import { storageService } from './services/storage.service.js';
 
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
@@ -53,16 +54,34 @@ function onGetUserPos() {
 function onPanTo(value) {
   console.log('Panning the Map');
   onGetSearchLoc(value)
-  .then(res => mapService.panTo(res.lat, res.lng))
+    .then(res => mapService.panTo(res.lat, res.lng))
 }
 
 
 function onGetSearchLoc(adress) {
-  const searchLocApi = 'AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg'
-  // const adress = 'haderah'
+  console.log(adress);
+  const locations = storageService.loadFromStorage('locations') || {}
+  if (location[adress]) return Promise.resolve(location[adress])
   var searchLoc = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`)
     .then(res => res.json())
     .then(res => res.results[0].geometry.location)
-    .then(res => { return res })
+    .then(res => {
+      locations[adress] = {
+        name: adress,
+        lat: res.lat,
+        lng: res.lng
+      }
+      storageService.saveToStorage('location', locations)
+      return res
+    })
+    console.log(locations);
   return searchLoc
 }
+
+
+function onRenderSavedLoc() {
+  var elSavedLoc = document.querySelector('.saved-locations')
+  // elSavedLoc.innerHTML = '<li>Test</li>'
+}
+
+// onRenderSavedLoc()
