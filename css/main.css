@@ -1,0 +1,11 @@
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.saved-locations-container {
+    height: 150px;
+    width: 150px;
+    background-color: rgba(0, 110, 255, 0.836);
+}
