@@ -45,6 +45,7 @@ function _connectGoogleApi() {
   });
 }
 
+<<<<<<< HEAD
 function mapCurrLoc(map) {
   map.addListener('click', (mapsMouseEvent) => {
     var loc = mapsMouseEvent.latLng.toJSON();
@@ -53,3 +54,8 @@ function mapCurrLoc(map) {
     addMarker(loc);
   });
 }
+=======
+function saveLocation() {
+    console.log('hi')
+}
+>>>>>>> ca47396cb0e3e6103768279947ead59d18211371
