@@ -10,7 +10,7 @@ window.onGetUserPos = onGetUserPos;
 window.onGetSearchLoc = onGetSearchLoc;
 window.OnGoTo = OnGoTo;
 window.OnRemoveLoc = OnRemoveLoc;
-window.onCopyUrl = onCopyUrl
+window.onCopyUrl = onCopyUrl;
 
 function onInit() {
   onRenderSavedLoc();
@@ -30,13 +30,11 @@ function getPosition() {
 }
 
 function onAddMarker() {
-  console.log('Adding a marker');
   mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
 }
 
 function onGetLocs() {
   locService.getLocs().then((locs) => {
-    console.log('Locations:', locs);
     document.querySelector('.locs').innerText = JSON.stringify(locs);
   });
 }
@@ -61,8 +59,6 @@ function onPanTo(value) {
 }
 
 function onGetSearchLoc(adress) {
-  console.log(adress);
-  //   const locations = storageService.loadFromStorage('locations') || {};
   if (location[adress]) return Promise.resolve(location[adress]);
   var searchLoc = fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${adress},+CA&key=AIzaSyDmDDO6BhTr0zAMYiCe19Iq7Suh_38fKQg`
@@ -106,7 +102,7 @@ function OnGoTo(lat, lng) {
 function OnRemoveLoc(str) {
   locService.getLocs().then((locs) => {
     var currLoc = locs.findIndex((loc) => {
-      return str === loc.name
+      return str === loc.name;
     });
 
     locService.removeLoc(currLoc);
@@ -116,6 +112,6 @@ function OnRemoveLoc(str) {
 }
 
 function onCopyUrl() {
-  var url = window.location.href
-  navigator.clipboard.writeText(url)
+  var url = window.location.href;
+  navigator.clipboard.writeText(url);
 }

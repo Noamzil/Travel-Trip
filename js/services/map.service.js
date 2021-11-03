@@ -29,6 +29,7 @@ function addMarker(loc) {
 function panTo(lat, lng) {
   var laLatLng = new google.maps.LatLng(lat, lng);
   gMap.panTo(laLatLng);
+  showWeather(lat, lng);
 }
 
 function _connectGoogleApi() {
@@ -48,8 +49,20 @@ function _connectGoogleApi() {
 function mapCurrLoc(map) {
   map.addListener('click', (mapsMouseEvent) => {
     var loc = mapsMouseEvent.latLng.toJSON();
-    console.log(`location picked ` + loc.lat, loc.lng);
     panTo(loc.lat, loc.lng);
     addMarker(loc);
   });
+}
+
+function showWeather(lat, lng) {
+  var weather = fetch(
+    `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=8cf55e734e492b8f5471b3e0ba9472a3`
+  )
+    .then((res) => res.json())
+    .then(
+      (res) =>
+        (document.querySelector(`.weather`).innerText = `${
+          res.weather[0].description
+        }, ${Math.round(res.main.temp - 272.15)}`)
+    );
 }

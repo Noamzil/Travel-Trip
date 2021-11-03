@@ -14,7 +14,6 @@ function getLocs() {
 
 function updateLocs(loc) {
   locs.push(loc);
-  console.log(`locs`, locs);
   return locs;
 }
 
